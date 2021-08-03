@@ -34,8 +34,8 @@
 - Adapters
     - repositories
         - `pkg/repository/*`
-    - http
-        - `pkg/http/*`
+    - protocols
+        - `pkg/proto/*`
 
 - Dependency Injection
     - `cmd/server/main.go`
