@@ -6,3 +6,7 @@ type Review struct {
 	Score        int    `json:"score"`
 	Text         string `json:"text"`
 }
+
+type Reviews struct {
+	Reviews []Review `json:"reviews"`
+}

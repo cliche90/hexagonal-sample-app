@@ -1,0 +1,11 @@
+{
+  "beers": [
+    {
+      "id": "beer_01",
+      "name": "Terra",
+      "brewery": "hite jinro",
+      "abv": 4.6,
+      "desc": "korean larger"
+    }
+  ]
+}

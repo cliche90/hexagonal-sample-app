@@ -1,0 +1,10 @@
+{
+  "reviews": [
+    {
+      "beer_id": "beer_01",
+      "reviewer_name": "snacky",
+      "score": 80,
+      "text": "good larger"
+    }
+  ]
+}

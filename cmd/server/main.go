@@ -8,12 +8,16 @@ import (
 )
 
 func main() {
-	r := &json.Repository{}
+	r := json.NewRepository(
+		"pkg/repository/json/beers.json",
+		"pkg/repository/json/reviews.json",
+	)
 
 	bs := beer.New(r)
 	rs := review.New(r)
 
 	s := http.New(bs, rs)
+
 	s.Start()
 	s.WaitStopSignal()
 }

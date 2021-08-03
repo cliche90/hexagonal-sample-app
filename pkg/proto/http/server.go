@@ -2,6 +2,7 @@ package http
 
 import (
 	"context"
+	"encoding/json"
 	"log"
 	"net/http"
 	"os"
@@ -45,33 +46,43 @@ func (s *server) WaitStopSignal() {
 
 func addBeer(bs beer.Service) http.HandlerFunc {
 	return func(resp http.ResponseWriter, req *http.Request) {
-		_ = bs.AddBeer(
-			beer.Beer{
-				Name:    "",
-				Brewery: "",
-				Abv:     0,
-				Desc:    "",
-			},
-		)
+		var b beer.Beer
+		_ = json.NewDecoder(req.Body).Decode(&b)
+		_ = bs.AddBeer(b)
 		_, _ = resp.Write([]byte("beers are added."))
+	}
+}
+
+func getBeers(bs beer.Service) http.HandlerFunc {
+	return func(resp http.ResponseWriter, req *http.Request) {
+		beers, _ := bs.GetBeers()
+		beersBytes, _ := json.MarshalIndent(beers, "", "  ")
+		_, _ = resp.Write(beersBytes)
 	}
 }
 
 func addReview(rs review.Service) http.HandlerFunc {
 	return func(resp http.ResponseWriter, req *http.Request) {
-		_ = rs.AddReview(review.Review{
-			BeerID:       "",
-			ReviewerName: "",
-			Score:        0,
-			Text:         "",
-		})
+		var r review.Review
+		_ = json.NewDecoder(req.Body).Decode(&r)
+		_ = rs.AddReview(r)
 		_, _ = resp.Write([]byte("reviews are added."))
+	}
+}
+
+func getReviews(rs review.Service) http.HandlerFunc {
+	return func(resp http.ResponseWriter, req *http.Request) {
+		reviews, _ := rs.GetReviews()
+		reviewsBytes, _ := json.MarshalIndent(reviews, "", "  ")
+		_, _ = resp.Write(reviewsBytes)
 	}
 }
 
 func New(bs beer.Service, rs review.Service) *server {
 	router := mux.NewRouter()
+	router.HandleFunc("/beers", getBeers(bs)).Methods("GET")
 	router.HandleFunc("/beers", addBeer(bs)).Methods("POST")
+	router.HandleFunc("/reviews", getReviews(rs)).Methods("GET")
 	router.HandleFunc("/reviews", addReview(rs)).Methods("POST")
 
 	done := make(chan os.Signal, 1)
